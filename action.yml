@@ -1,0 +1,36 @@
+name: Vancer Baseline Checker
+description: Detect security baseline violations in Terraform and OpenTofu files changed by a pull request.
+author: Vancer
+
+inputs:
+  github_token:
+    description: GitHub token used to read pull-request files and publish the security report.
+    required: false
+    default: ${{ github.token }}
+  fail_on_violation:
+    description: Fail the action when one or more critical violations are found.
+    required: false
+    default: "true"
+  comment_on_pr:
+    description: Publish or update the Vancer report on pull requests.
+    required: false
+    default: "true"
+
+outputs:
+  violations:
+    description: Number of critical security violations found.
+    value: ${{ steps.check.outputs.violations }}
+  changed_files:
+    description: Number of changed Terraform/OpenTofu files scanned.
+    value: ${{ steps.check.outputs.changed_files }}
+
+runs:
+  using: composite
+  steps:
+    - id: check
+      shell: bash
+      env:
+        INPUT_GITHUB_TOKEN: ${{ inputs.github_token }}
+        INPUT_FAIL_ON_VIOLATION: ${{ inputs.fail_on_violation }}
+        INPUT_COMMENT_ON_PR: ${{ inputs.comment_on_pr }}
+      run: python3 "${{ github.action_path }}/entrypoint.py"
