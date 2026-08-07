@@ -1,0 +1,27 @@
+name: Vancer Baseline Checker
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  baseline:
+    name: Check infrastructure baseline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out pull request
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Vancer Baseline Checker
+        uses: ./
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_violation: "true"
