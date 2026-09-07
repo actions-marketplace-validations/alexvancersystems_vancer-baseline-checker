@@ -34,3 +34,7 @@ runs:
         INPUT_FAIL_ON_VIOLATION: ${{ inputs.fail_on_violation }}
         INPUT_COMMENT_ON_PR: ${{ inputs.comment_on_pr }}
       run: python3 "${{ github.action_path }}/entrypoint.py"
+
+      branding:
+  icon: 'shield'
+  color: 'blue'
